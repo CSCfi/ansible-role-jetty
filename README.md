@@ -3,7 +3,7 @@
 Ansible-Role: Jetty
 =========
 
-An role which downloads and unpacks Jetty under /opt. Jetty user and group are also created if needed
+An role which downloads and unpacks Jetty under /opt. Jetty user and group are also created if needed.
 
 Requirements
 ------------
