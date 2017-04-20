@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/CSC-IT-Center-for-Science/ansible-role-jetty.svg?branch=master)](https://travis-ci.org/CSC-IT-Center-for-Science/ansible-role-jetty)
+[![Build Status](https://travis-ci.org/CSCfi/ansible-role-jetty.svg?branch=master)](https://travis-ci.org/CSCfi/ansible-role-jetty)
 
 Ansible-Role: Jetty
 =========
@@ -33,9 +33,9 @@ None
 Example Playbook
 ----------------
 
-    - hosts: localhost
+    - hosts: all
       roles:
-        - { role: CSC-IT-Center-for-Science.jetty }
+        - { role: CSCfi.jetty }
 
 
 
