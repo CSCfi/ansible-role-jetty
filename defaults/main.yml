@@ -1,7 +1,8 @@
 ---
 # defaults file for jetty
 
-jetty_version: 9.4.5.v20170502
+# jetty_version: 9.4.5.v20170502
+jetty_version: 9.4.2.v20170220
 jetty_dst_dir: /opt
 jetty_user_homedir: /opt/jetty
 
