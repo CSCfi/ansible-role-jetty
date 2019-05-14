@@ -15,7 +15,7 @@ Role Variables
 
 See defaults/main.yml for the variables you can overwrite via role call as a parameter.
 
-* jetty_version: 9.4.14.v20181114
+* jetty_version: 9.4.18.v20190429
 * jetty_dst_dir: /opt
 * jetty_user_homedir: /opt/jetty
 
