@@ -1,0 +1,42 @@
+---
+
+- name: Jetty - configure - prepare enabled modules
+  template:
+    src: "start.d/{{ item }}.ini.j2"
+    dest: "{{ jetty_base }}/start.d/{{ item }}.ini"
+    group: "{{ jetty_group_name }}"
+    owner: "{{ jetty_user_name }}"
+    mode: "{{ jetty_file_mode }}"
+  loop: "{{ jetty_modules_enabled }}"
+  when:
+    - jetty_modules_configure
+    - jetty_modules_enabled | length > 0
+
+- name: Jetty - configure - add overriding XML configs for enabled modules
+  template:
+    src: "etc/{{ item }}.j2"
+    dest: "{{ jetty_base }}/etc/{{ item }}"
+    group: "{{ jetty_group_name }}"
+    owner: "{{ jetty_user_name }}"
+    mode: "{{ jetty_file_mode }}"
+  loop: "{{ jetty_modules_config_overrides }}"
+  when:
+    - jetty_modules_configure
+    - jetty_modules_config_overrides | length > 0
+
+- name: Jetty - configure - generate `jetty.start` file # noqa301
+  shell: >-
+    java
+    -jar {{ jetty_home }}/start.jar
+    -Djetty.home={{ jetty_home }}
+    -Djetty.base={{ jetty_base }}
+    --dry-run
+    > {{ jetty_base }}/jetty.start
+
+- name: Jetty - configure - update `jetty.start` file permissions
+  file:
+    group: "{{ jetty_group_name }}"
+    owner: "{{ jetty_user_name }}"
+    mode: 0750
+    path: "{{ jetty_base }}/jetty.start"
+    state: file
