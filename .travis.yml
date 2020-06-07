@@ -22,10 +22,10 @@ env:
   - distribution: centos
     version: 7
   # https://en.wikipedia.org/wiki/Fedora_(operating_system)#Releases
-  # - distribution: fedora
-  #   version: 32
-  # - distribution: fedora
-  #   version: 31
+  - distribution: fedora
+    version: 32
+  - distribution: fedora
+    version: 31
   # https://en.wikipedia.org/wiki/Debian_version_history
   # Buster
   - distribution: debian
@@ -35,11 +35,11 @@ env:
     version: 9
   # https://en.wikipedia.org/wiki/Ubuntu#Releases
   # 20.04 LTS
-  # - distribution: ubuntu
-  #   version: focal
-  # # 18.04 LTS
-  # - distribution: ubuntu
-  #   version: bionic
+  - distribution: ubuntu
+    version: focal
+  # 18.04 LTS
+  - distribution: ubuntu
+    version: bionic
 
 before_install:
   # - sudo apt-get update
