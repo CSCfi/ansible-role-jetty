@@ -1,16 +1,6 @@
 FROM centos:8
 
-# Install systemd -- See https://hub.docker.com/_/centos/
 RUN dnf install -y redhat-lsb-core
-# RUN yum -y update; yum clean all; \
-#   (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
-#   rm -f /lib/systemd/system/multi-user.target.wants/*; \
-#   rm -f /etc/systemd/system/*.wants/*; \
-#   rm -f /lib/systemd/system/local-fs.target.wants/*; \
-#   rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
-#   rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
-#   rm -f /lib/systemd/system/basic.target.wants/*; \
-#   rm -f /lib/systemd/system/anaconda.target.wants/*;
 
 # Install Ansible
 RUN dnf install -y yum-utils && \
@@ -19,8 +9,7 @@ RUN dnf install -y yum-utils && \
   dnf update -y && \
   dnf config-manager --enable cr
 
-RUN dnf install -y git ansible sudo
-# RUN yum clean all
+RUN dnf install -y ansible sudo
 
 # Disable requiretty
 RUN sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers
