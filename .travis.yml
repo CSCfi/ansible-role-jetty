@@ -44,44 +44,44 @@ env:
 before_install:
   # - sudo apt-get update
   # Pull container
-  - sudo docker pull ${distribution}:${version}
+  - docker pull ${distribution}:${version}
   # Customize container
-  - sudo docker build --no-cache --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests
+  - docker build --no-cache --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests
 
 # before_install:
-#   - sudo docker pull ${distribution}:${version}
-#   - sudo docker build --no-cache --rm --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests
+#   - docker pull ${distribution}:${version}
+#   - docker build --no-cache --rm --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests
 
 script:
   - container_id=$(mktemp)
-  - sudo docker run --detach --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/etc/ansible/roles/ansible-role-jetty:ro ${distribution}-${version}:ansible > "${container_id}"
-  - sudo docker run --detach --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/etc/ansible/roles/ansible-role-jetty:ro ${distribution}-${version}:ansible > "${container_id}"
-  - sudo docker exec "$(cat ${container_id})" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/ansible-role-jetty/tests/test.yml --syntax-check
-  - sudo docker exec "$(cat ${container_id})" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/ansible-role-jetty/tests/test.yml
+  - docker run --detach --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/etc/ansible/roles/ansible-role-jetty:ro ${distribution}-${version}:ansible > "${container_id}"
+  - docker run --detach --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/etc/ansible/roles/ansible-role-jetty:ro ${distribution}-${version}:ansible > "${container_id}"
+  - docker exec "$(cat ${container_id})" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/ansible-role-jetty/tests/test.yml --syntax-check
+  - docker exec "$(cat ${container_id})" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/ansible-role-jetty/tests/test.yml
   - >
-    sudo docker exec "$(cat ${container_id})" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/ansible-role-jetty/tests/test.yml
-    | grep -q 'changed=0.*failed=0'
+    docker exec "$(cat ${container_id})" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/ansible-role-jetty/tests/test.yml
+    | grep -q -E 'ok=\d+.*unreachable=0\s+failed=0.*ignored=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
-  - sudo docker rm -f "$(cat ${container_id})"
+  - docker rm -f "$(cat ${container_id})"
 
 # script:
 #   # Run container in detached state
-#   - sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}:ansible "${init}" > "${container_id}"
+#   - docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}:ansible "${init}" > "${container_id}"
 
 #   # Syntax check
-#   - sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check
+#   - docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check
 #   # Test role
-#   - sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
+#   - docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
 #   # Idempotence test
 #   - >
-#     sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
+#     docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
 #     | grep -q 'failed=0'
 #     && (echo 'Idempotence test: pass' && exit 0)
 #     || (echo 'Idempotence test: fail' && exit 1)
 
 #     # Clean up
-#   - sudo docker stop "$(cat ${container_id})"
+#   - docker stop "$(cat ${container_id})"
 
 # notifications:
 #   webhooks: https://galaxy.ansible.com/api/v1/notifications/

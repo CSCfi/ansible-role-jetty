@@ -6,6 +6,6 @@ RUN apt-get update && \
   rm -rf /var/lib/apt/lists/*
 
 # Install Ansible inventory file
-RUN mkdir -p /etc/ansible && echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
+RUN mkdir -p /etc/ansible && echo "[local]\nlocalhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3" > /etc/ansible/hosts
 
 ENTRYPOINT ["/bin/systemd"]
