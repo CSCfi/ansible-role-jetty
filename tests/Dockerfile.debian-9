@@ -5,10 +5,10 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Install Ansible
 RUN apt update && \
   apt dist-upgrade -o Dpkg::Options::="--force-confnew" -y && \
-  apt install -t stretch-backports -o Dpkg::Options::="--force-confnew" -y ansible && \
+  apt install -t stretch-backports -o Dpkg::Options::="--force-confnew" -y ansible systemd && \
   rm -rf /var/lib/apt/lists/*
 
 # Install Ansible inventory file
 RUN mkdir -p /etc/ansible && echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
 
-# ENTRYPOINT ["/bin/systemd"]
+ENTRYPOINT ["/bin/systemd"]

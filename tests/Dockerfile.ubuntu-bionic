@@ -4,7 +4,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
   # apt dist-upgrade -o Dpkg::Options::="--force-confnew" -y && \
 RUN apt update && \
-  apt install -y software-properties-common && \
+  apt install -y software-properties-common systemd
 
 RUN apt-add-repository --yes --update ppa:ansible/ansible && \
   apt install -y ansible && \
@@ -12,4 +12,4 @@ RUN apt-add-repository --yes --update ppa:ansible/ansible && \
 
 RUN echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
 
-# ENTRYPOINT ["/bin/systemd"]
+ENTRYPOINT ["/bin/systemd"]
