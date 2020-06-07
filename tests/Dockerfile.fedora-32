@@ -1,7 +1,7 @@
 FROM fedora:32
 
 RUN dnf -y update
-RUN dnf install ansible
+RUN dnf -y install ansible
 
 # RUN dnf -y install systemd && \
 # (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
