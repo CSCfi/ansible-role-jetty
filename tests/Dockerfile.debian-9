@@ -4,6 +4,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Install Ansible
 RUN apt update && \
+  apt dist-upgrade -o Dpkg::Options::="--force-confnew" -y && \
   apt install -o Dpkg::Options::="--force-confnew" -y software-properties-common git ansible systemd && \
   rm -rf /var/lib/apt/lists/*
 
