@@ -1,8 +1,10 @@
 FROM debian:stretch-backports
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 # Install Ansible
 RUN apt update && \
-  apt install -y software-properties-common git ansible systemd && \
+  apt install -o Dpkg::Options::="--force-confnew" -y software-properties-common git ansible systemd && \
   rm -rf /var/lib/apt/lists/*
 
 # Install Ansible inventory file

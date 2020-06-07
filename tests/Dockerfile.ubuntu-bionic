@@ -1,7 +1,9 @@
 FROM ubuntu:bionic
 
+ARG DEBIAN_FRONTEND=noninteractive
+
+  # apt dist-upgrade -o Dpkg::Options::="--force-confnew" -y && \
 RUN apt update && \
-  apt dist-upgrade -y && \
   apt install -y software-properties-common systemd && \
   rm -rf /var/lib/apt/lists/*
 
