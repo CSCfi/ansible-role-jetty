@@ -1,0 +1,13 @@
+FROM debian:buster-backports
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Install Ansible
+RUN apt update && \
+  apt install -o Dpkg::Options::="--force-confnew" -y ansible systemd && \
+  rm -rf /var/lib/apt/lists/*
+
+# Install Ansible inventory file
+RUN mkdir -p /etc/ansible && echo "[local]\nlocalhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3" > /etc/ansible/hosts
+
+ENTRYPOINT ["/bin/systemd"]

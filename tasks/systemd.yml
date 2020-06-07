@@ -1,0 +1,22 @@
+---
+
+- name: Jetty - systemd - prepare a service file
+  template:
+    src: "jetty.service.j2"
+    dest: "{{ jetty_base }}/jetty.service"
+    group: "{{ jetty_group_name }}"
+    owner: "{{ jetty_user_name }}"
+    mode: "{{ jetty_file_mode }}"
+
+- name: Jetty - systemd - create symlink
+  file:
+    src: "{{ jetty_base }}/jetty.service"
+    dest: "/etc/systemd/system/jetty.service"
+    state: "link"
+
+- name: Jetty - systemd - enable service
+  systemd:
+    name: "jetty"
+    enabled: true
+    masked: false
+    daemon_reload: true

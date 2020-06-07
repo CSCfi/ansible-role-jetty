@@ -1,0 +1,22 @@
+FROM centos:8
+
+RUN dnf install -y redhat-lsb-core
+
+# Install Ansible
+RUN dnf install -y yum-utils && \
+  dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && \
+  rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-8 && \
+  dnf update -y && \
+  dnf config-manager --enable cr
+
+RUN dnf install -y ansible sudo
+
+# Disable requiretty
+RUN sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers
+
+# Install Ansible inventory file
+RUN echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts
+
+VOLUME [ "/sys/fs/cgroup" ]
+
+CMD ["/usr/sbin/init"]

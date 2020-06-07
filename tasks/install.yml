@@ -1,0 +1,95 @@
+---
+
+- name: Jetty - install - create group
+  group:
+    name: "{{ jetty_group_name }}"
+    state: present
+    system: true
+  when: jetty_group_create
+
+- name: Jetty - install - create user
+  user:
+    name: "{{ jetty_user_name }}"
+    comment: "Jetty Web Server pseudo-user"
+    createhome: false
+    group: "{{ jetty_group_name }}"
+    home: "{{ jetty_home }}"
+    shell: "/usr/sbin/nologin"
+    state: present
+    system: true
+  when: jetty_user_create
+
+- name: Jetty - install - check that Jetty distribution has been installed
+  stat:
+    path: "{{ system_base }}/jetty-distribution-{{ jetty_version }}"
+  register: _is_jetty
+
+- name: Jetty - install - unarchive distribution package
+  unarchive:
+    src: "https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/{{ jetty_version }}/jetty-distribution-{{ jetty_version }}.tar.gz"
+    dest: "{{ system_base }}"
+    group: "{{ jetty_group_name }}"
+    owner: "{{ jetty_user_name }}"
+    remote_src: true
+  when: not _is_jetty.stat.exists or jetty_force_install
+
+- name: Jetty - install - change ownership of the distribution folder
+  file:
+    path: "{{ system_base }}/jetty-distribution-{{ jetty_version }}"
+    owner: "{{ jetty_user_name }}"
+    group: "{{ jetty_group_name }}"
+    mode: "{{ jetty_dir_mode }}"
+    state: directory
+  when: not _is_jetty.stat.exists or jetty_force_install
+
+- name: Jetty - install - create symbolic link to distribution
+  file:
+    src: "{{ system_base }}/jetty-distribution-{{ jetty_version }}"
+    dest: "{{ system_base }}/jetty"
+    state: link
+  when: not _is_jetty.stat.exists or jetty_force_install
+
+- name: Jetty - install - create `base` and `logs` folder structure
+  file:
+    group: "{{ jetty_group_name }}"
+    owner: "{{ jetty_user_name }}"
+    mode: "{{ jetty_dir_mode }}"
+    path: "{{ item }}"
+    recurse: true
+    state: directory
+  loop:
+    - "{{ jetty_base }}"
+    - "{{ jetty_base }}/etc"
+    - "{{ jetty_base }}/lib/ext"
+    - "{{ jetty_base }}/resources"
+    - "{{ jetty_base }}/start.d"
+    - "{{ jetty_base }}/webapps"
+    - "{{ jetty_logs }}"
+
+- name: Jetty - install - find obsolete distribution folders
+  find:
+    file_type: directory
+    excludes: "jetty-distribution-{{ jetty_version }}"
+    paths: "{{ system_base }}"
+    patterns: "jetty-distribution-.*"
+    recurse: true
+    use_regex: true
+  register: _jetty_cleanup
+  when: jetty_clean_old
+
+- name: Jetty - install - delete obsolete distribution folders
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ _jetty_cleanup.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+  when:
+    - jetty_clean_old
+    - _jetty_cleanup.matched > 0
+
+- name: Jetty - install - delete `demo-base` folder
+  file:
+    path: "{{ system_base }}/jetty-distribution-{{ jetty_version }}/demo-base"
+    state: absent
+  when: jetty_demo_delete

@@ -1,0 +1,40 @@
+---
+
+- name: Jetty - ssl - check if keystore exists
+  stat:
+    path: "{{ jetty_base + '/' + jetty_modules.sslContext.keyStorePath }}"
+  register: _is_keystore
+
+- name: Jetty - ssl - check if SSL certificate exists
+  command: >-
+    keytool
+    -list
+    -keystore {{ jetty_base + '/' + jetty_modules.sslContext.keyStorePath }}
+    -storepass "{{ jetty_modules.sslContext.keyStorePassword }}"
+    -alias jetty
+  register: _is_cert
+  when: _is_keystore.stat.exists
+
+- name: Jetty - ssl - generate self-signed SSL certificate with alias 'jetty'
+  command: >-
+    keytool -genkey -noprompt
+    -alias jetty
+    -dname 'CN=localhost, OU=DevSecOps, O=Contoso Ltd., L=Lima, C=PE'
+    -ext SAN=dns:localhost
+    -ext EKU=serverAuth
+    -keyalg RSA
+    -sigalg SHA512withRSA
+    -keystore {{ jetty_base + '/' + jetty_modules.sslContext.keyStorePath }}
+    -storetype {{ jetty_modules.sslContext.keyStoreType }}
+    -storepass "{{ jetty_modules.sslContext.keyStorePassword }}"
+    -keypass {{ jetty_modules.sslContext.keyStorePassword if jetty_modules.sslContext.keyStoreType == 'PKCS12'
+      else jetty_modules.sslContext.keyManagerPassword }}
+  when: not _is_keystore.stat.exists or _is_cert.failed
+
+- name: Jetty - ssl - update keystore file permissions
+  file:
+    group: "{{ jetty_group_name }}"
+    owner: "{{ jetty_user_name }}"
+    mode: "{{ jetty_file_mode }}"
+    path: "{{ jetty_base + '/' + jetty_modules.sslContext.keyStorePath }}"
+    state: file

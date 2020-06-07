@@ -1,0 +1,32 @@
+# Jetty Web Application Server service file for systemd
+#
+# Managed by Ansible CSCfi.jetty role
+# DO NOT EDIT
+# all local changes will be overwritten!
+#
+
+[Unit]
+Description=Jetty Web Application Server
+Before=runlevel2.target runlevel3.target runlevel4.target runlevel5.target shutdown.target display-manager.service
+After=syslog.target network.target remote-fs.target nss-lookup.target
+Conflicts=shutdown.target
+
+[Service]
+Environment=JAVA_OPTIONS="{{ java_options }}" JETTY_PID={{ jetty_pid }} JETTY_START_LOG={{ jetty_start_log }} JETTY_STATE={{ jetty_state }}
+ExecStart={{ jetty_home }}/bin/jetty.sh start
+ExecStop={{ jetty_home }}/bin/jetty.sh stop
+ExecReload={{ jetty_home }}/bin/jetty.sh restart
+User={{ jetty_user_name }}
+Group={{ jetty_group_name }}
+GuessMainPID=no
+IgnoreSIGPIPE=no
+KillMode=process
+PIDFile={{ jetty_pid }}
+RemainAfterExit=yes
+Restart=on-failure
+RestartSec=30s
+TimeoutSec=5min
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

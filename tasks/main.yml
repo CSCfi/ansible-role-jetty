@@ -1,31 +1,17 @@
 ---
-# tasks file for jetty
-- unarchive:
-    src: https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/{{ jetty_version }}/jetty-distribution-{{ jetty_version }}.tar.gz
-    dest: "{{ jetty_dst_dir }}"
-    remote_src: True
 
-- name: Create group
-  group:
-    name={{ jetty_group_name }}
-    state=present
-    system=yes
-  when: jetty_group_create
+- name: Jetty - install package
+  include_tasks: "install.yml"
+  when: jetty_install
 
-- name: Create user
-  user:
-    name={{ jetty_user_name }}
-    state=present
-    comment='Jetty Web Server'
-    createhome=no
-    group={{ jetty_group_name }}
-    home={{ jetty_user_homedir }}
-    shell=/usr/sbin/nologin
-    system=yes
-  when: jetty_user_create
+- name: Jetty - configure application server
+  include_tasks: "configure.yml"
+  when: jetty_modules_configure
 
-- name: Create symbolic link to distribution
-  file:
-    src="{{ jetty_dst_dir }}/jetty-distribution-{{ jetty_version}}"
-    dest={{ jetty_dst_dir }}/jetty
-    state=link
+- name: Jetty - generate self-signed certificate
+  include_tasks: "ssl.yml"
+  when: jetty_ssl_generate_cert
+
+- name: Jetty - update `systemd` configuration
+  include_tasks: "systemd.yml"
+  when: jetty_service_enabled
