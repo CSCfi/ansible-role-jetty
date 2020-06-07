@@ -60,7 +60,7 @@ script:
   - docker exec "$(cat ${container_id})" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/ansible-role-jetty/tests/test.yml
   - >
     docker exec "$(cat ${container_id})" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/ansible-role-jetty/tests/test.yml
-    | grep -q -E 'ok=\d+.*unreachable=0\s+failed=0.*ignored=0'
+    | grep -q -E 'unreachable=0\s+failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
   - docker rm -f "$(cat ${container_id})"
