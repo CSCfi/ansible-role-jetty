@@ -46,7 +46,7 @@ before_install:
   # Pull container
   - sudo docker pull ${distribution}:${version}
   # Customize container
-  - sudo docker build --no-cache --rm=true --file=tests/dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests
+  - sudo docker build --no-cache --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests
 
 # before_install:
 #   - sudo docker pull ${distribution}:${version}
