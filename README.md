@@ -12,25 +12,27 @@ None. Purpose of this role is to perform basic installation with security in min
 
 Available variables are listed below, along with default values (see `defaults/main.yml` for details):
 
-- `jetty_version: 9.4.29.v20200521`
+- `jetty_version: 9.4.30.v20200611`
 - `jetty_install: true`
 - `jetty_force_install: false`
 - `system_base: /opt` - base directory where distribution package(s) will be installed to;
 - `jetty_home: /opt/jetty` - defines the location of symlink name to the Jetty distribution with its libs, default modules and default XML files (typically start.jar, lib, etc), as well asJetty user home directory. **Important**, it should be treated as a standard of truth and remain unmodified or changed;
 - `jetty_base: /var/lib/jetty` - defines the location of a specific implementation of a Jetty server, its configuration, logs and web applications (typically start.d/*.ini files, logs and webapps); all changes or additions to your configuration should take place there;
 - `jetty_logs: /var/log/jetty`
-- `jetty_dir_mode: 0750`
-- `jetty_file_mode: 0640`
+- `jetty_dir_mode: 0750` - `base` and `logs` directory permissions;
+- `jetty_file_mode: 0640` - for files under `base` only;
 - `jetty_user_name: jetty`
 - `jetty_group_name: jetty`
+- `jetty_runtime_user: "{{ jetty_user_name }}"` - for running a web application under a different user, in that case make sure it is part of `jetty_group_name` group;
 - `jetty_group_create: true`
 - `jetty_user_create: true`
 - `jetty_clean_old: false` - whether to delete any other installed distribution except of the specified version; matching directories by `{{system_base}}/jetty-distribution-*`;
 - `jetty_demo_delete: true`
 - `jetty_service_enabled: true`
-- `jetty_pid: {{ jetty_base }}/jetty.pid"`
-- `jetty_start_log: {{ jetty_logs }}/jetty-start.log"`
-- `jetty_state: {{ jetty_base }}/jetty.state"`
+- `jetty_pid: {{ jetty_base }}/jetty.pid`
+- `jetty_start: false`
+- `jetty_start_log: {{ jetty_logs }}/jetty-start.log`
+- `jetty_state: {{ jetty_base }}/jetty.state`
 - `jetty_web_default` - dictionary of modified and changeable settings in `webdefault.xml`; other changed setting is disabled directory listings (`dirAllowed`):
 
     - `compiler: 11`

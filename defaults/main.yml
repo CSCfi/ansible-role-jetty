@@ -3,7 +3,7 @@
 
 #
 # package and installation settings
-jetty_version: 9.4.29.v20200521
+jetty_version: 9.4.30.v20200611
 jetty_install: true
 jetty_force_install: false
 
@@ -16,6 +16,7 @@ jetty_file_mode: 0640
 
 jetty_user_name: jetty
 jetty_group_name: jetty
+jetty_runtime_user: "{{ jetty_user_name }}"
 
 jetty_group_create: true
 jetty_user_create: true
@@ -27,6 +28,7 @@ jetty_demo_delete: true
 # systemd service settings
 jetty_service_enabled: true
 jetty_pid: "{{ jetty_base }}/jetty.pid"
+jetty_start: false
 jetty_start_log: "{{ jetty_logs }}/jetty-start.log"
 jetty_state: "{{ jetty_base }}/jetty.state"
 
@@ -73,7 +75,8 @@ jetty_modules_config_overrides:
   - "webdefault.xml"
 
 #
-jetty_modules:
+# example of default settings for Jetty modules. Will be merged with `jetty_modules` variable.
+jetty_modules_defaults:
   connectionlimit:
     maxConnections: 1500
   # also applicable for `customrequestlog`
@@ -91,6 +94,7 @@ jetty_modules:
     rateControl:
       maxEventsPerSecond: 10
   inetaccess:
+    include: "127.0.0.1"
     includeConnectors: "http,https"
     excludeConnectors: ""
   # part of `server.ini`
@@ -114,6 +118,8 @@ jetty_modules:
   threadlimit:
     forwardedHeader: "Forwarded"
 
+# merge any overrides with the default settings dictionary
+jetty_modules: "{{ jetty_modules_defaults | combine(jetty_modules_overrides | default({}), recursive=True) }}"
 
 # see https://securityheaders.com for more information
 jetty_headers:

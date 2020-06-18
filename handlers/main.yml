@@ -1,0 +1,25 @@
+---
+
+- name: "(Handler) Jetty run"
+  block:
+
+    - name: "(Handler) Jetty start"
+      service:
+        name: jetty
+        state: started
+        enabled: true
+      notify: "(Handler) Jetty check"
+
+  # - name: "(Handler) Jetty reload"
+  #   command: "nginx -s reload"
+  #   changed_when: false
+
+  when:
+    - jetty_start | bool
+    - not ansible_check_mode
+
+- name: "(Handler) Jetty check"
+  command: "{{ jetty_base }}/bin/jetty.sh check"
+  changed_when: false
+  environment:
+    JETTY_PID: "{{ jetty_pid }}"

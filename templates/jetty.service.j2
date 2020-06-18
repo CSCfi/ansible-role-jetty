@@ -4,6 +4,8 @@
 # DO NOT EDIT
 # all local changes will be overwritten!
 #
+# generated at {{ ansible_date_time.iso8601 }}
+#
 
 [Unit]
 Description=Jetty Web Application Server
@@ -12,11 +14,11 @@ After=syslog.target network.target remote-fs.target nss-lookup.target
 Conflicts=shutdown.target
 
 [Service]
-Environment=JAVA_OPTIONS="{{ java_options }}" JETTY_PID={{ jetty_pid }} JETTY_START_LOG={{ jetty_start_log }} JETTY_STATE={{ jetty_state }}
+Environment=JAVA_OPTIONS="{{ java_options }}" JETTY_BASE={{ jetty_base }} JETTY_PID={{ jetty_pid }} JETTY_START_LOG={{ jetty_start_log }} JETTY_STATE={{ jetty_state }}
 ExecStart={{ jetty_home }}/bin/jetty.sh start
 ExecStop={{ jetty_home }}/bin/jetty.sh stop
 ExecReload={{ jetty_home }}/bin/jetty.sh restart
-User={{ jetty_user_name }}
+User={{ jetty_runtime_user }}
 Group={{ jetty_group_name }}
 GuessMainPID=no
 IgnoreSIGPIPE=no
@@ -25,6 +27,8 @@ PIDFile={{ jetty_pid }}
 RemainAfterExit=yes
 Restart=on-failure
 RestartSec=30s
+StandardOutput=file:{{ jetty_start_log }}
+StandardError=file:{{ jetty_logs }}/jetty-service.err
 TimeoutSec=5min
 Type=forking
 

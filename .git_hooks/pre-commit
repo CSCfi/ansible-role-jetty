@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+# Pre-commit hooks to copy steps from default CI/CD pipeline. See `bitbucket-pipelines.yml` for details.
+ansible-lint --nocolor -p --parseable-severity --exclude "${HOME}"/.ansible/roles/
+yamllint -s  .

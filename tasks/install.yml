@@ -38,7 +38,7 @@
     path: "{{ system_base }}/jetty-distribution-{{ jetty_version }}"
     owner: "{{ jetty_user_name }}"
     group: "{{ jetty_group_name }}"
-    mode: "{{ jetty_dir_mode }}"
+    mode: 0755
     state: directory
   when: not _is_jetty.stat.exists or jetty_force_install
 
@@ -52,7 +52,7 @@
 - name: Jetty - install - create `base` and `logs` folder structure
   file:
     group: "{{ jetty_group_name }}"
-    owner: "{{ jetty_user_name }}"
+    owner: "{{ jetty_runtime_user }}"
     mode: "{{ jetty_dir_mode }}"
     path: "{{ item }}"
     recurse: true

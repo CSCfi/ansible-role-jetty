@@ -34,7 +34,7 @@
 - name: Jetty - ssl - update keystore file permissions
   file:
     group: "{{ jetty_group_name }}"
-    owner: "{{ jetty_user_name }}"
+    owner: "{{ jetty_runtime_user }}"
     mode: "{{ jetty_file_mode }}"
     path: "{{ jetty_base + '/' + jetty_modules.sslContext.keyStorePath }}"
     state: file

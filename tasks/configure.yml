@@ -5,7 +5,7 @@
     src: "start.d/{{ item }}.ini.j2"
     dest: "{{ jetty_base }}/start.d/{{ item }}.ini"
     group: "{{ jetty_group_name }}"
-    owner: "{{ jetty_user_name }}"
+    owner: "{{ jetty_runtime_user }}"
     mode: "{{ jetty_file_mode }}"
   loop: "{{ jetty_modules_enabled }}"
   when:
@@ -17,7 +17,7 @@
     src: "etc/{{ item }}.j2"
     dest: "{{ jetty_base }}/etc/{{ item }}"
     group: "{{ jetty_group_name }}"
-    owner: "{{ jetty_user_name }}"
+    owner: "{{ jetty_runtime_user }}"
     mode: "{{ jetty_file_mode }}"
   loop: "{{ jetty_modules_config_overrides }}"
   when:
@@ -28,15 +28,15 @@
   shell: >-
     java
     -jar {{ jetty_home }}/start.jar
-    -Djetty.home={{ jetty_home }}
-    -Djetty.base={{ jetty_base }}
+    -Djetty.home="{{ jetty_home }}"
+    -Djetty.base="{{ jetty_base }}"
     --dry-run
     > {{ jetty_base }}/jetty.start
 
 - name: Jetty - configure - update `jetty.start` file permissions
   file:
     group: "{{ jetty_group_name }}"
-    owner: "{{ jetty_user_name }}"
+    owner: "{{ jetty_runtime_user }}"
     mode: 0750
     path: "{{ jetty_base }}/jetty.start"
     state: file

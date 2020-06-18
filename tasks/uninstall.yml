@@ -1,0 +1,11 @@
+---
+
+- name: Jetty - uninstall
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ jetty_home }}"
+    - "{{ system_base }}/jetty-distribution-{{ jetty_version }}"
+    - "{{ jetty_base }}"
+    - "{{ jetty_logs }}"
