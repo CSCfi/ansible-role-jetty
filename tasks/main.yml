@@ -15,3 +15,8 @@
 - name: Jetty - update `systemd` configuration
   include_tasks: "systemd.yml"
   when: jetty_service_enabled
+
+- name: Jetty - set return facts
+  set_fact:
+    jetty_home: "{{ jetty_home }}"
+    jetty_version: "{{ jetty_version }}"

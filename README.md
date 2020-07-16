@@ -16,8 +16,8 @@ Available variables are listed below, along with default values (see `defaults/m
 - `jetty_install: true`
 - `jetty_force_install: false`
 - `system_base: /opt` - base directory where distribution package(s) will be installed to;
-- `jetty_home: /opt/jetty` - defines the location of symlink name to the Jetty distribution with its libs, default modules and default XML files (typically start.jar, lib, etc), as well asJetty user home directory. **Important**, it should be treated as a standard of truth and remain unmodified or changed;
-- `jetty_base: /var/lib/jetty` - defines the location of a specific implementation of a Jetty server, its configuration, logs and web applications (typically start.d/*.ini files, logs and webapps); all changes or additions to your configuration should take place there;
+- `jetty_home: /opt/jetty` - defines the location of symlink name to the Jetty distribution with its libs, default modules and default XML files (typically `start.jar`, `lib`, `etc`), as well as Jetty user home directory. **Important**, it should be treated as a standard of truth and remain unmodified or changed;
+- `jetty_base: /var/lib/jetty` - defines the location of a specific implementation of a Jetty server, its configuration, logs and web applications (typically `start.d/*.ini` files, `logs` and `webapps`); all changes or additions to your configuration should take place there;
 - `jetty_logs: /var/log/jetty`
 - `jetty_dir_mode: 0750` - `base` and `logs` directory permissions;
 - `jetty_file_mode: 0640` - for files under `base` only;
@@ -29,6 +29,7 @@ Available variables are listed below, along with default values (see `defaults/m
 - `jetty_clean_old: false` - whether to delete any other installed distribution except of the specified version; matching directories by `{{system_base}}/jetty-distribution-*`;
 - `jetty_demo_delete: true`
 - `jetty_service_enabled: true`
+- `jetty_service_name: "jetty"`
 - `jetty_pid: {{ jetty_base }}/jetty.pid`
 - `jetty_start: false`
 - `jetty_start_log: {{ jetty_logs }}/jetty-start.log`
@@ -130,6 +131,13 @@ Available variables are listed below, along with default values (see `defaults/m
   -XX:HeapDumpPath={{ jetty_logs }}/jvm_heapdump.hprof
   ```
 
+## Returned values
+
+The following values are "returned" via `set_fact` for consecutive re-use:
+
+- `jetty_home`
+- `jetty_version`
+
 ## Dependencies
 
 While there is no direct dependencies for the role, it is understandable that all Jetty's requirements, i.e. Java runtime environment, must be satisfied. See [official documentation](https://www.eclipse.org/jetty/documentation/current/what-jetty-version.html) for details.
@@ -153,7 +161,7 @@ The following steps have been taken to secure and harden the service:
 - low resource monitor has been configured;
 - thread limit per remote IP is set to 10;
 - servlet standard security handling to the class path has been added;
-- logging directory is set to `${JETTY_BASE/logs}`;
+- logging directory is set to `{{ jetty_base }}/logs`;
 - server logging pattern is expanded with full [RFC 3339](https://tools.ietf.org/html/rfc3339) timestamp and other extra fields;
 - request logging has been enabled in [expanded NCSA](https://en.wikipedia.org/wiki/Common_Log_Format) format;
 - as an example, HTTP header rewrite rule has been configured (`jetty/etc/jetty-rewrite.xml`) and disabled (`jetty/start.d/rewrite.ini-disabled`);

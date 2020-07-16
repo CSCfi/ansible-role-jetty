@@ -27,6 +27,7 @@ jetty_demo_delete: true
 #
 # systemd service settings
 jetty_service_enabled: true
+jetty_service_name: "jetty"
 jetty_pid: "{{ jetty_base }}/jetty.pid"
 jetty_start: false
 jetty_start_log: "{{ jetty_logs }}/jetty-start.log"
