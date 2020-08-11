@@ -19,11 +19,6 @@
     system: true
   when: jetty_user_create
 
-- name: Jetty - install - check that Jetty distribution has been installed
-  stat:
-    path: "{{ system_base }}/jetty-distribution-{{ jetty_version }}"
-  register: _is_jetty
-
 - name: Jetty - install - unarchive distribution package
   unarchive:
     src: "https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/{{ jetty_version }}/jetty-distribution-{{ jetty_version }}.tar.gz"
@@ -31,7 +26,6 @@
     group: "{{ jetty_group_name }}"
     owner: "{{ jetty_user_name }}"
     remote_src: true
-  when: not _is_jetty.stat.exists or jetty_force_install
 
 - name: Jetty - install - change ownership of the distribution folder
   file:
@@ -40,14 +34,12 @@
     group: "{{ jetty_group_name }}"
     mode: 0755
     state: directory
-  when: not _is_jetty.stat.exists or jetty_force_install
 
 - name: Jetty - install - create symbolic link to distribution
   file:
     src: "{{ system_base }}/jetty-distribution-{{ jetty_version }}"
     dest: "{{ system_base }}/jetty"
     state: link
-  when: not _is_jetty.stat.exists or jetty_force_install
 
 - name: Jetty - install - create `base` and `logs` folder structure
   file:

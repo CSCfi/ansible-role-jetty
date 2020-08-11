@@ -1,8 +1,13 @@
 ---
 
+- name: Jetty - check that Jetty distribution has been installed
+  stat:
+    path: "{{ system_base }}/jetty-distribution-{{ jetty_version }}"
+  register: _is_jetty
+
 - name: Jetty - install package
   include_tasks: "install.yml"
-  when: jetty_install
+  when: jetty_install and (not _is_jetty.stat.exists or jetty_force_install)
 
 - name: Jetty - configure application server
   include_tasks: "configure.yml"
