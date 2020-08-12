@@ -3,7 +3,7 @@
 
 #
 # package and installation settings
-jetty_version: 9.4.30.v20200611
+jetty_version: 9.4.31.v20200723
 jetty_install: true
 jetty_force_install: false
 
