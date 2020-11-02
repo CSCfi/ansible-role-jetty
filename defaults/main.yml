@@ -3,8 +3,8 @@
 
 # jetty_version: 9.4.27.v20200227
 # jetty_version: 9.4.29.v20200521
-# jetty_version: 9.4.30.v20200611
-jetty_version: 9.4.32.v20200930
+jetty_version: 9.4.30.v20200611
+# jetty_version: 9.4.32.v20200930
 
 
 jetty_dst_dir: /opt
