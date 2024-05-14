@@ -1,7 +1,7 @@
 ---
 # tasks file for jetty
 - unarchive:
-    src: https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/{{ jetty_version }}/jetty-distribution-{{ jetty_version }}.tar.gz
+    src: https://repo1.maven.org/maven2/org/eclipse/jetty/{{ jetty_distribution }}/{{ jetty_version }}/{{ jetty_distribution }}-{{ jetty_version }}.tar.gz
     dest: "{{ jetty_dst_dir }}"
     remote_src: True
 
@@ -26,6 +26,6 @@
 
 - name: Create symbolic link to distribution
   file:
-    src="{{ jetty_dst_dir }}/jetty-distribution-{{ jetty_version}}"
+    src="{{ jetty_dst_dir }}/{{ jetty_distribution }}-{{ jetty_version}}"
     dest={{ jetty_dst_dir }}/jetty
     state=link
